@@ -5,6 +5,7 @@ app = (function () {
 	var moduloApimock="js/apimock.js";
 	var moduloApiclient="js/apiclient.js";
 	var va=  {name:null,seats:[],date:null};
+        var datafunction;
 
     function cambiarNombre() {
         cine = nuevoNombre;
@@ -24,7 +25,7 @@ app = (function () {
     }
 
     function mapElemtosObjetos(datos) {
-		prueba(datos);
+        prueba(datos);
         var mapeoDatos = datos.map(function (val) {
             return {movieName: val.movie.name, 
 				genre: val.movie.genre, 
@@ -72,7 +73,8 @@ app = (function () {
     }
 
     function insertarSillas(datos) {
-		va=datos;
+        dataFunction = datos;
+	va=datos;
         var asientos = datos.seats;
         var a = document.getElementById("canvitas");
         var atx = a.getContext("2d");
@@ -94,15 +96,15 @@ app = (function () {
    function salvar(){
 	///cinemaName = $("#name_input").val();
 	//cinemaDate = $("#date_input").val();
-	var newDate = '2018-12-19 17:00';
+	var newDate = "2018-12-19 17:300";
 	
 	va.date = newDate;
 	va.movie.name="SuperHeroes Movie";
 	va.movie.genre="Action";
 	$.getScript(moduloApiclient, function(){
-            api.update("cinemaX",'2018-12-19 17:00',"SuperHeroes Movie",va);
+            api.update("cinemaX","2018-12-19 17:00","SuperHeroes Movie",va);
         });
-}
+        }
 
 
     return {

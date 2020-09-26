@@ -1,12 +1,12 @@
 api = (function () {
 
     var seats = [[true, true, true, true, true, true, true, true, true, true, true, true],
- [true, true, true, true, true, true, false, true, true, true, true, true], 
-	[true, true, true, true, true, true, true, true, false, true, true, true],
- [true, true, true, false, true, true, true, true, true, true, true, true],
- [true, true, true, true, true, true, true, true, false, true, true, true], 
+ [true, true, true, true, true, true, true, true, true, true, true, true], 
+	[true, true, true, true, true, true, true, true, true, true, true, true],
+ [true, true, true, true, true, true, true, true, true, true, true, true],
+ [true, true, true, true, true, true, true, true, true, true, true, true], 
 [true, true, true, true, true, true, true, true, true, true, true, true], 
-[false, true, true, true, true, true, true, true, true, true, true, false]];
+[true, true, true, true, true, true, true, true, true, true, true, true]];
     var mockdata = [];
     var function1Y = {"movie": {"name": "SuperHeroesMovie", "genre": "Action"}, "seats": seats, "date": "2018-12-19 17:00"};
     var function2Y = {"movie": {"name": "TheNight", "genre": "Horror"}, "seats": seats, "date": "2018-12-19 19:40"};

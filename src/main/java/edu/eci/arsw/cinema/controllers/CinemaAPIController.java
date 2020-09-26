@@ -80,7 +80,7 @@ public class CinemaAPIController {
 
     }
     @RequestMapping(value = "/{name}", method = RequestMethod.PUT)
-    public ResponseEntity<?> putResourceCinemaByName(@RequestBody CinemaFunction cf, @PathVariable String name) {
+    public ResponseEntity<?> putResourceCinemaByName(@PathVariable String name,@RequestBody CinemaFunction cf) {
         try {
             cinemaServices.updateFunction(name, cf);
             return new ResponseEntity<>(cinemaServices.getCinemaByName(name), HttpStatus.ACCEPTED);

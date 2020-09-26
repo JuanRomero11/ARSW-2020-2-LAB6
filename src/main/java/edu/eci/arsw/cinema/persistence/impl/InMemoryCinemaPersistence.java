@@ -33,7 +33,7 @@ public class InMemoryCinemaPersistence implements CinemaPersitence {
         //load stub data
         String functionDate = "2018-12-18";
         List<CinemaFunction> functions = new ArrayList<>();
-        CinemaFunction funct1 = new CinemaFunction(new Movie("SuperHeroes Movie", "Action"), "2018-12-18 15:30");
+        CinemaFunction funct1 = new CinemaFunction(new Movie("SuperHeroes Movie", "Action"), "2018-12-19 17:00");
         CinemaFunction funct2 = new CinemaFunction(new Movie("The Night", "Horror"), "2018-12-18 15:30");
         functions.add(funct1);
         functions.add(funct2);
@@ -119,17 +119,19 @@ public class InMemoryCinemaPersistence implements CinemaPersitence {
     @Override
     public void updateFunction(String name, CinemaFunction function) {
         CinemaFunction z = null;
+        System.out.println(function+" HOLIWIIS");
         for (CinemaFunction k : cinemas.get(name).getFunctions()) {
-            if (k.equals(function)) {
+            if (k.getMovie().getGenre().equals(function.getMovie().getGenre()) && k.getDate().substring(0, 10).equals(function.getDate().substring(0, 10)) && k.getMovie().getName().equals(function.getMovie().getName())) {
                 z = k;
             }
         }
         if (z != null) {
             z.setMovie(function.getMovie());
             z.setDate(function.getDate());
-        } else {
-            addFunctionInCinema(name, function);
         }
+        else {
+           addFunctionInCinema(name, function);
+       }
     }
 
    
