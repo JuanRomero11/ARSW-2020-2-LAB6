@@ -59,5 +59,7 @@ public interface CinemaPersitence {
 
     public void updateFunction(String name, CinemaFunction function);
 
+    public CinemaFunction getFunctionByMovieName(String name, String nameMovie, String  date);
+
     
 }

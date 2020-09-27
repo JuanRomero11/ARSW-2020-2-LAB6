@@ -134,6 +134,17 @@ public class InMemoryCinemaPersistence implements CinemaPersitence {
        }
     }
 
+    @Override
+    public CinemaFunction getFunctionByMovieName(String name, String nameMovie, String date) {
+        CinemaFunction z = null;
+        for (CinemaFunction k : cinemas.get(name).getFunctions()) {
+            if (k.getDate().substring(0, 10).equals(date.substring(0, 10)) && k.getMovie().getName().equals(name)) {
+                z = k;
+            }
+        }
+        return z;
+    }
+
    
     
 

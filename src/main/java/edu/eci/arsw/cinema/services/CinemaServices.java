@@ -68,7 +68,9 @@ public class CinemaServices {
     public List<CinemaFunction> getFunctionsbyCinemaAndDate(String cinema, String date){
         return cps.getFunctionsbyCinemaAndDate(cinema, date);
     }
-
+    public CinemaFunction getFunctionByMovieName(String name, String nameMovie, String  date) throws CinemaException{
+        return cps.getFunctionByMovieName(name, nameMovie, date);
+    }
 
     public List<Movie> filter(Cinema c, String filtro, String date){
         return filter.filter(c, filtro, date);

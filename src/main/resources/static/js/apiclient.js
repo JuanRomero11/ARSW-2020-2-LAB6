@@ -6,6 +6,13 @@ api = (function () {
             callback(data);
         });
     }
+    /**
+    function getFunctionByMovieName(cinema_name,  movie_name, fdate,callback) {///cinemas//{nombre}/{fecha}/{nombrePelicula}
+        $.getJSON("http://localhost:8080/cinemas/" +cinema_name+"/"+movie_name+"/"+ fdate, function (data) {
+            callback(data);
+        });
+    }
+    **/
 
     function getFunctionsByCinemaAndDate(cinema_name, fdate, callback) {//cinemas/{nombre}/{fecha}
         $.getJSON("http://localhost:8080/cinemas/" + cinema_name +"/"+ fdate, function (data) {
@@ -40,9 +47,8 @@ api = (function () {
         getFunctionsByCinema: getFunctionsByCinema,
         getFunctionsByCinemaAndDate: getFunctionsByCinemaAndDate,
         getFunctionByNameAndDate: getFunctionByNameAndDate,
-		update:update
-
+        // getFunctionByMovieName : getFunctionByMovieName,
+        update:update
     }
-
 })();
 
