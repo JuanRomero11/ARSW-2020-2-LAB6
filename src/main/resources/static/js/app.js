@@ -4,25 +4,23 @@ app = (function () {
     var fecha;
 	var moduloApimock="js/apimock.js";
 	var moduloApiclient="js/apiclient.js";
-	var va=  {name:null,seats:[],date:null};
-        var datafunction;
+	var va=  {movie:{name:null,genre:null},seats:[],date:null};
+        var datosApi;
+        
+       
 
-    function cambiarNombre() {
-        cine = nuevoNombre;
-    }
-
-
-    function cambiarFecha() {
-        fecha = nuevaFecha;
-    }
+  
 
     function getFunctionsByCinemaAndDate() {
         cine = $("#nombre").val();
         fecha = $("#fecha").val();
+        
+        console.info(fecha);
         $.getScript(moduloApiclient, function(){
            api.getFunctionsByCinemaAndDate(cine, fecha, mapElemtosObjetos);
         });
     }
+
     function mapElemtosObjetos(datos) {
         var mapeoDatos = datos.map(function (val) {
             return {movieName: val.movie.name, 
@@ -33,6 +31,11 @@ app = (function () {
     }
 
     function rellenarTabla(datos) {
+        var canvas = document.getElementById("canvitas");
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        datosApi =datos;
         $("#nombreCine").text("Cinema selected:"+cine);
         var tabla = $("table");
         var body = $("tbody");
@@ -40,13 +43,15 @@ app = (function () {
         
 		tabla.append("<tbody>");
 		var tblBody = $("tbody");
-        
-		datos.map(function (movie) {
+                
+		datos.map(function(movie){
+                    va.movie.name= movie.movieName;
+                    va.movie.genre= movie.genre;
             var fila = '<tr><td>' + movie.movieName + '</td><td>' 
 				+ movie.genre + '</td><td>' 
 				+ movie.hour + '</td><td>' + 
 				"<input type='button' class='show' value='Disponibilidad' onclick=" + 
-				"app.busquedaSillas(\""+movie.movieName+"\",\""+fecha+"\",\""+movie.hour+"\")" + 
+				"app.busquedaSillas()" + 
 				"></input>" + '</tr>';
             tblBody.append(fila);
         })
@@ -55,23 +60,35 @@ app = (function () {
     }
 
 
-    function busquedaSillas(movie,date,hour) {
-        $("#moviename").text("Seats:"+movie);
+
+    function busquedaSillas() {
+        var canvas = document.getElementById("canvitas");
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+        var movieName;
+        var hora;
+        datosApi.map(function(val){
+            movieName = val.movieName;
+            hora = val.hour;
+        })
+        $("#moviename").text("Seats:"+movieName);
         $.getScript(moduloApiclient, function(){
+            
             console.info(" entreeeeeee ");
-            api.getFunctionByNameAndDate("cinemaX",fecha,"SuperHeroes Movie",insertarSillas);
+            api.getFunctionByNameAndDate(cine,fecha,movieName,insertarSillas);
             console.info(" saliiiiiiiiiii ");
         });
     }
 
     function insertarSillas(datos) {
+        va.seats = datos;
         
-        console.log(asientos);
-        var asientos = datos[0].seats;
+        // var asientos = datos.seats;
         var a = document.getElementById("canvitas");
         var atx = a.getContext("2d");
 		var y=40;
-		for (i of datos.seats){
+		for (i of datos){
 			var x=0;
 			for (j of i){
 				atx.fillStyle = "gray";
@@ -88,21 +105,19 @@ app = (function () {
    function salvar(){
 	///cinemaName = $("#name_input").val();
 	//cinemaDate = $("#date_input").val();
-	var newDate = "2018-12-19 17:300";
-	
-	va.date = newDate;
-	va.movie.name="SuperHeroes Movie";
-	va.movie.genre="Action";
+	var newDate = $("#nombre1").val();
+        va.date=newDate;
+        fecha=newDate;
+        console.info(va);
+        console.info(cine);
 	$.getScript(moduloApiclient, function(){
-            api.update("cinemaX","2018-12-19 17:00","SuperHeroes Movie",va);
+            api.update(cine,va);
         });
-        getFunctionsByCinemaAndDate();
-        }
-
+        app.getFunctionsByCinemaAndDate();
+    }
+        
 
     return {
-        cambiarNombre: cambiarNombre,
-        cambiarFecha: cambiarFecha,
         getFunctionsByCinemaAndDate: getFunctionsByCinemaAndDate,
         busquedaSillas: busquedaSillas,
         salvar:salvar

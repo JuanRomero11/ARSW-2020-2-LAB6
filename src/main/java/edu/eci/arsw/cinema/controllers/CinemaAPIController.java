@@ -53,7 +53,6 @@ public class CinemaAPIController {
     }
     * */
     
-    
     @RequestMapping(value="/{name}", method= RequestMethod.GET)
     public ResponseEntity<?> getCinemasName(@PathVariable String name) {
          try {
@@ -76,8 +75,8 @@ public class CinemaAPIController {
     @RequestMapping(value="/{name}/{date}/{moviename}", method = RequestMethod.GET)
     public ResponseEntity<?> getMoviebyCinemaAndDate(@PathVariable String name, @PathVariable String date, @PathVariable String moviename) throws CinemaPersistenceException, CinemaException {
         try {
-            CinemaFunction b = cinemaServices.getFunctionByMovieName(name,moviename, date);
-            /** List<CinemaFunction> a =  cinemaServices.getFunctionByMovieName(name,moviename, date);
+            CinemaFunction b = null;
+            List<CinemaFunction> a = cinemaServices.getFunctionsbyCinemaAndDate(name, date);
             for (CinemaFunction i : a) {
                 if (i.getMovie().getName().equals(moviename)) {
                     b = i;
@@ -86,9 +85,8 @@ public class CinemaAPIController {
             if (b == null) {
                 throw new CinemaPersistenceException("No se encontro la funcion " + date);
             }
-            **/
-            return new ResponseEntity<>(b, HttpStatus.ACCEPTED);
-        } catch (Exception ex) {
+            return new ResponseEntity<>(b.getSeats(), HttpStatus.ACCEPTED);
+        } catch (CinemaPersistenceException ex) {
             Logger.getLogger(CinemaAPIController.class.getName()).log(Level.SEVERE, null, ex);
             return new ResponseEntity<>("HTTP 404", HttpStatus.NOT_FOUND);
         }

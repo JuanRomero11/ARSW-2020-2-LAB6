@@ -26,7 +26,7 @@ api = (function () {
         });
     }
 
-    function update(cinema_name,  fdate, movie_name, cc){
+    function update(cinema_name, cc){
 	var cinemaFunction = JSON.stringify(cc);
         const promise = new Promise((resolve, reject) => {
             $.ajax({
@@ -41,6 +41,8 @@ api = (function () {
                 reject('FAIL');
             });
         });
+        
+            
     }
 
     return {
