@@ -112,4 +112,22 @@ public class CinemaAPIController {
             return new ResponseEntity<>("HTTP 404",HttpStatus.NOT_FOUND);
         }
     }
+    @RequestMapping(value = "/{name}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteFunction(@PathVariable String name, @RequestBody CinemaFunction funcion) {
+        if (funcion.getMovie() == null || funcion.getDate() == null) {
+            return new ResponseEntity<>("JSON Bad Format", HttpStatus.BAD_REQUEST);
+        }
+        try {
+            cinemaServices.delete(name, funcion);
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception ex) {
+            Logger.getLogger(CinemaAPIController.class.getName()).log(Level.SEVERE, null, ex);
+            if (ex.getMessage().equals("No existe el cine" + name)) {
+                return new ResponseEntity<>(ex.getMessage(), HttpStatus.NOT_FOUND);
+            } else {
+                return new ResponseEntity<>(ex.getMessage(), HttpStatus.CONFLICT);
+            }
+        }
+    }
+
 }

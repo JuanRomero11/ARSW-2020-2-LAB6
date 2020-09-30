@@ -61,5 +61,7 @@ public interface CinemaPersitence {
 
     public CinemaFunction getFunctionByMovieName(String name, String nameMovie, String  date);
 
+	public void detele(String name, CinemaFunction funcion);
+
     
 }

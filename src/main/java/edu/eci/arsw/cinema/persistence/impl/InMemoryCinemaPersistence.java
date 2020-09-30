@@ -145,6 +145,19 @@ public class InMemoryCinemaPersistence implements CinemaPersitence {
         return z;
     }
 
+	@Override
+	public void detele(String name, CinemaFunction funcion) {
+		 System.out.println(name+"   toy fuera xd");
+		for (CinemaFunction k : cinemas.get(name).getFunctions()) {
+            if (k.getMovie().getGenre().equals(funcion.getMovie().getGenre()) && k.getDate().substring(0, 10).equals(funcion.getDate().substring(0, 10)) && k.getMovie().getName().equals(funcion.getMovie().getName())) {
+                cinemas.get(name).delete(funcion);
+                System.out.println(name+"nombre xd");
+            }
+        }
+		
+       
+	}
+
    
     
 

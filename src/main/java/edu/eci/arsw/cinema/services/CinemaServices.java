@@ -86,5 +86,9 @@ public class CinemaServices {
         cps.updateFunction( name, function);
     }
 
+	public void delete(String name, CinemaFunction funcion) {
+		cps.detele(name,funcion);
+	}
+
 
 }

@@ -23,6 +23,17 @@ public class Cinema {
         
         this.functions=functions;
     }
+    public void delete(CinemaFunction fun) {
+    	functions.remove(fun);
+    	for (CinemaFunction k : getFunctions()) {
+            if (k.getMovie().getGenre().equals(fun.getMovie().getGenre()) && k.getDate().substring(0, 10).equals(fun.getDate().substring(0, 10)) && k.getMovie().getName().equals(fun.getMovie().getName())) {
+                System.out.println("nombre SSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSSS");
+            	functions.remove(k);
+
+            }
+        }
+    	System.out.println(functions.size()+"    la longi papi");
+    }
     public void addFunction(CinemaFunction function){
         functions.add(function);
     }

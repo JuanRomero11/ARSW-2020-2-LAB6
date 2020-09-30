@@ -5,8 +5,9 @@ app = (function () {
 	var moduloApimock="js/apimock.js";
 	var moduloApiclient="js/apiclient.js";
 	var va=  {movie:{name:null,genre:null},seats:[],date:null};
-        var datosApi;
-        
+    var datosApi;
+	var rellenodata=false;
+    
        
 
   
@@ -55,6 +56,7 @@ app = (function () {
 				"></input>" + '</tr>';
             tblBody.append(fila);
         })
+		if(rellenodata){app.busquedaSillas(); rellenodata=false;}
         tabla.append(tblBody);
         tabla.append("</tbody>");
     }
@@ -103,24 +105,94 @@ app = (function () {
     }
 
    function salvar(){
-	///cinemaName = $("#name_input").val();
-	//cinemaDate = $("#date_input").val();
+	
 	var newDate = $("#nombre1").val();
+	if(rellenodata){
+		newFunction();
+		rellenodata=false;
+	}else{
         va.date=newDate;
         fecha=newDate;
         console.info(va);
         console.info(cine);
-	$.getScript(moduloApiclient, function(){
-            api.update(cine,va);
+		$.getScript(moduloApiclient, function(){api.update(cine,va);});
+	        app.getFunctionsByCinemaAndDate();
+	    }
+	}
+	
+	function newFunction(){
+		var fecha = $("#nombre1").val();
+        cine = $("#nombre").val();
+        var movieNam = $("#movieNew").val();
+        var genreNam = $("#genreNew").val();
+		var sillas = [[true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true], [true, true, true, true, true, true, true, true, true, true, true, true]];
+        
+		var map = {
+            "movie": {"name": movieNam, "genre": genreNam},
+            "seats": sillas,
+            "date": fecha 
+        };
+        
+		$.getScript(moduloApiclient, function () {
+            api.crear(cine, map);
         });
-        app.getFunctionsByCinemaAndDate();
-    }
+ 		
+		rellenodata=true;
+		
+		var canvas = document.getElementById("canvitas");
+        var ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.beginPath();
+		
+        getFunctionsByCinemaAndDate();
+
+	}
+	
+	function rellenarInfo(){
+			
+		var nFecha = $("#fecha1");
+        var nMovie= '<label id="nMovie" for="nombre">Movie name:</label>'
+        var nGenre= '<label id="nGenre" for="nombre">Movie genre:</label>'
+        var inMovie = '<input type="text" id="movieNew" name="movie" placeholder="Movie name">';
+        var inGenre = '<input type="text" id="genreNew" name="genre" placeholder="Genre">';
+        var id1 = '<br id="id1">';
+        var id2 = '<br id="id2">';
+
+		nFecha.append(nMovie);
+        nFecha.append(inMovie);
+        nFecha.append(id1);
+        nFecha.append(nGenre);
+        nFecha.append(inGenre);
+        nFecha.append(id2);
+		
+		rellenodata=true;
+
+		}
+		
+	function deleteF(){
+		
+		
+		cine = $("#nombre").val();
+        var map = {
+            "movie": va.movie,
+            "seats": va.seats,
+            "date": fecha
+        };
+		console.info(va.movie+ "  "+  fecha);
+        $.getScript(moduloApiclient, function () {
+            api.borrar(cine, map);
+        });
+	}
+		
+	
         
 
     return {
         getFunctionsByCinemaAndDate: getFunctionsByCinemaAndDate,
         busquedaSillas: busquedaSillas,
-        salvar:salvar
+        salvar:salvar,
+		rellenarInfo:rellenarInfo,
+		deleteF:deleteF
     }
 
 })();

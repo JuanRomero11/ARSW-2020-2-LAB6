@@ -44,13 +44,55 @@ api = (function () {
         
             
     }
+	
+	function crear(cine, funcion){
+        var fun = JSON.stringify(funcion);
+
+        const promise = new Promise((resolve, reject) => {
+            $.ajax({
+                url: "http://localhost:8080/cinemas/" + cine,
+                type: 'POST',
+                data: fun,
+                contentType: "application/json"
+            }).done(function () {
+                resolve('SUCCESS');
+
+            }).fail(function (msg) {
+                reject('FAIL');
+            });
+        });
+
+	}
+	
+	function borrar(cine, funcion){
+        var fun = JSON.stringify(funcion);
+
+        const promise = new Promise((resolve, reject) => {
+            $.ajax({
+                url: "http://localhost:8080/cinemas/" + cine,
+                type: 'DELETE',
+                data: fun,
+                contentType: "application/json"
+            }).done(function () {
+                resolve('SUCCESS');
+
+            }).fail(function (msg) {
+                reject('FAIL');
+            });
+        });
+
+	}
+
 
     return {
         getFunctionsByCinema: getFunctionsByCinema,
         getFunctionsByCinemaAndDate: getFunctionsByCinemaAndDate,
         getFunctionByNameAndDate: getFunctionByNameAndDate,
         // getFunctionByMovieName : getFunctionByMovieName,
-        update:update
+        update:update,
+		crear:crear,
+		borrar:borrar
+
     }
 })();
 
