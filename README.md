@@ -32,6 +32,8 @@ Esta opción debe cambiar la manera como funciona la opción 'save/update', pues
 - Hacer POST al recurso /cinemas/{name}, para crear la nueva función.
 - Hacer GET al respectivo recurso, para actualizar el listado de funciones.
 
+(TENER EN CUENTA INGRASAR LA FECHA COMPLETA)
+
 3  Agregue el botón 'DELETE', de manera que (también con promesas):
 Borre el canvas.
 - Haga DELETE de la función actualmente seleccionada.
