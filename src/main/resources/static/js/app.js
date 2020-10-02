@@ -7,11 +7,153 @@ app = (function () {
 	var va=  {movie:{name:null,genre:null},seats:[],date:null};
     var datosApi;
 	var rellenodata=false;
-    
+	
+	
+	var stompClient = null;
+    let ticket = false;
        
 
-  
+  class Seat {
+        constructor(row, col) {
+            this.row = row;
+            this.col = col;
+        }
+    }
 
+    function buyTicket(){
+        var row = $("#row").val();
+        var column = $("#col").val();
+        console.info("buying ticket at row: " + row + " col: " + column);
+        verifyAvailability(row, column);
+    }
+
+    var connectAndSubscribe = function (callback) {
+        console.info('Connecting to WS...');
+        var socket = new SockJS('/stompendpoint');
+        stompClient = Stomp.over(socket);
+
+        //subscribe to /topic/TOPICXX when connections succeed
+        stompClient.connect({}, function (frame) {
+            console.log('Connected: ' + frame);
+            stompClient.subscribe('/topic/buyticket', function (message) {
+                //alert("evento recibido");
+                //var theObject = JSON.parse(message.body);
+				callback(message);
+				
+            });
+        });
+    };
+
+
+	 function validarEvento(evento) {
+        var theObject = JSON.parse(evento.body);
+        console.info(theObject);
+        reDraw(theObject.row, theObject.col);///////////
+		//getFunctionsByCinemaAndDate();
+    }
+
+	function reDraw(fila, columna) {
+        var c = document.getElementById("canvitas");
+        var ctx = c.getContext("2d");
+        ctx.fillStyle = "#ff0000";
+        ctx.fillRect((columna) * 50 , (fila) * 55 + 40 -55, 45, 40);
+    }
+
+	function getMousePosition() {
+		console.info("entre al getmouse");
+	        if (va == null) {
+	            Swal.fire({
+					  icon: 'error',
+					  title: 'Seleccione funcion',
+					})
+	        } else {
+	            if (!ticket) {ticket = true;}
+				console.info("entre al else");
+	            $('#canvitas').click(function (c) {
+	                var rect = canvitas.getBoundingClientRect();
+					console.info("entre al else y mas pa dentro");
+	                var row = c.clientX - rect.left;
+	                var col = c.clientY - rect.top;
+					console.info(row+ " yy "+ col);
+	                disponibilidad(row, col);
+	            });
+	        }
+	
+	    };
+
+    var verifyAvailability = function (row, col) {
+        var st = new Seat(row, col);
+		
+		var flag=false;
+		var y=40;
+		console.info(row+"   r y c   "+col);
+		for (var i=0;i< va.seats.length+1;i++){
+			var x=0;
+			for (var j=0; j <= va.seats[i].length; j++){
+				if(va.seats[i][j]==true && row-1==i && col-1==j ){
+					va.seats[i][j] = false;
+		           Swal.fire({
+					  icon: 'success',
+					  title: 'Completdo',
+					  text: 'ticket comprao',
+					})
+					stompClient.send("/topic/buyticket", {}, JSON.stringify(st));
+					flag=true;
+				}
+				x+=50;
+			}
+			y+=55;
+		} 
+				if(!flag) {
+            console.info("Ticket not available");
+        }
+
+    };
+
+    
+	function disponibilidad(x, y) {
+        var c = document.getElementById("canvitas");
+        var ctx = c.getContext("2d");
+        const pixel = ctx.getImageData(x, y, 1, 1).data;
+        if (!(pixel[0] == 0 && pixel[1] == 153 && pixel[2] == 0 && pixel[3] == 255)) { 
+            
+            
+                Swal.fire({
+					  icon: 'error',
+					  title: 'asiento ocupado',
+					})
+        } else {
+            calcularAsiento(x, y);
+        }
+    }
+
+	function calcularAsiento(x1, y1) {
+        var row;
+        var col;
+
+		var y=40;
+		var r=0;
+		
+		for (i of va.seats){
+			r++;
+			var c=0;
+			var x=50;
+			for (j of i){
+				c++;
+				console.info("x1= "+x1+" y1= "+y1+" x= "+x+" y= "+y);
+				if(x1>=x && x1<= x+50 && y1>=y && y1<= y+55 ){
+					row=r;
+					col=c;
+				}
+				
+				x+=50;
+				//atx.fillRect(x, y , 45, 40);
+			}
+			y+=55;
+		}
+        verifyAvailability(row, col);
+	}
+	
     function getFunctionsByCinemaAndDate() {
         cine = $("#nombre").val();
         fecha = $("#fecha").val();
@@ -93,9 +235,9 @@ app = (function () {
 		for (i of datos){
 			var x=0;
 			for (j of i){
-				atx.fillStyle = "gray";
+				atx.fillStyle = "#009900";
 				if(j==false){
-					atx.fillStyle = "cyan";
+					atx.fillStyle = "#ff0000";
 				}
 				x+=50;
 				atx.fillRect(x, y , 45, 40);
@@ -185,14 +327,21 @@ app = (function () {
 	}
 		
 	
-        
+    function init(){
+        connectAndSubscribe(validarEvento);
+
+    }
 
     return {
         getFunctionsByCinemaAndDate: getFunctionsByCinemaAndDate,
         busquedaSillas: busquedaSillas,
         salvar:salvar,
 		rellenarInfo:rellenarInfo,
-		deleteF:deleteF
+		deleteF:deleteF,
+		init: init,
+        buyTicket: buyTicket,
+		getMousePosition: getMousePosition
+        
     }
 
 })();
